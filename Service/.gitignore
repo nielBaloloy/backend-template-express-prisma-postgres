@@ -1,6 +1,15 @@
-node_modules
-# Keep environment variables out of version control
+# Ignore env and secrets
 .env
+*.env
+db.env
+service/.env
 
-/node_modules
+# Node modules
+**/node_modules
 
+# Postgres volume (optional, can be Docker-managed only)
+pgdata/
+
+# Build artifacts
+**/dist
+**/build

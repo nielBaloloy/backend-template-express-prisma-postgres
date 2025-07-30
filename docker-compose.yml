@@ -1,12 +1,10 @@
-
-
 services:
  
 
   server:
     build: ./service
     ports:
-      - "5001:5001"
+      - "5000:5000"
     volumes:
       - ./service:/app
       - /app/node_modules
@@ -15,15 +13,13 @@ services:
     depends_on:
       - db
 
-  db: 
+  db:
     image: postgres:latest
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin1234
-      POSTGRES_DB: hnation-db
+    env_file:
+      - ./db.env
     ports:
-      - "5434:5433" 
+      - "5434:5432"  # Corrected container port for Postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
 
