@@ -25,14 +25,101 @@ A minimal, production-ready backend boilerplate built with Express.js, Prisma OR
 Tech Stack
 
 Node.js + Express — web server framework
+
 Prisma ORM — Type-safe database toolkit
+
 PostgreSQL — relational database
+
 Docker + Docker Compose — Containerization 
+
 TypeScript — Strongly-typed development
 
 
 
+# docker compose
 
+
+services:
+  client:
+    build: ./hoodie-nation-app
+    ports:
+      - "5174:5173"  # Host:Container
+    volumes:
+      - ./hoodie-nation-app:/app
+      - /app/node_modules
+    depends_on:
+      - server
+
+  server:
+    build: ./service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./service:/app
+      - /app/node_modules
+    env_file:
+      - ./service/.env
+    depends_on:
+      - db
+
+  db: 
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_DB: hnation-db
+    ports:
+      - "5434:5433" 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+
+
+
+# docker compose template
+
+version: '3.8'
+
+services:
+  client:
+    build: ./client-app
+    ports:
+      - "${CLIENT_PORT:-5173}:5173"  # Host:Container
+    volumes:
+      - ./client-app:/app
+      - /app/node_modules
+    depends_on:
+      - server
+
+  server:
+    build: ./backend-service
+    ports:
+      - "${SERVER_PORT:-5000}:5000"
+    volumes:
+      - ./backend-service:/app
+      - /app/node_modules
+    env_file:
+      - ./backend-service/.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-app_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
 
 
 
