@@ -61,7 +61,9 @@ services:
     
       - server
 
+
   server:
+  
     build: ./backend-service
     ports:
       - "${SERVER_PORT:-5000}:5000"
@@ -74,6 +76,7 @@ services:
       - db
 
   db:
+  
     image: postgres:latest
     restart: always
     environment:
@@ -85,7 +88,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+
 volumes:
+
   pgdata:
 
 
